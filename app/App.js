@@ -66,8 +66,12 @@ export default function App() {
     const views = [];
     for ( var i =0; i<unitList.length; i++){
      views.push(
-        <Pressable onPress ={ () => {
-
+       
+        <Pressable
+        nativeID = {unitList[i].toString()}
+         onPress ={ () => {
+          console.log("native id:"+self.nativeID);
+          setUnit(self.nativeID);
           fadeOut();
           }}
           style={{width: vw(80)}}><Text>{unitList[i]}</Text></Pressable>
