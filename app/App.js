@@ -22,6 +22,30 @@ export default function App() {
   const [value, onChangeText] = React.useState('');
   const [unit, setUnit] = React.useState('M');
 
+  const buttonSize = useRef(1).current;
+
+  const boopIn = () => {
+    Animated.timing(buttonSize, {
+      toValue: 1.1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const boopOut = () => {
+    console.log("fadeourt");
+    Animated.timing(buttonSize, {
+      toValue: 1,
+      useNativeDriver: false,
+      duration: 300
+    }).start();
+  };
+
+
+
+
+
+
   const zAnim = useRef(new Animated.ValueXY({ x: vw(10), y: vh(100) })).current;
   const fadeIn = () => {
 
@@ -88,6 +112,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+    <Animated.View style={styles.buttonicantthinkofaname, {
+        transform: [{ scale: buttonSize }],
+      }}>
+      <Pressable><Text>
+        three Bananaas long
+      </Text></Pressable>
+    </Animated.View>
     <Animated.View style={[
           styles.unitMenu, zAnim.getLayout()
         ]}>
@@ -153,5 +184,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     zIndex: 2,
     elevation: 5,
+  }, buttonicantthinkofaname: {
+    position: 'absolute',
+    top: vh(50),
+    left: vw(15),
+    width: vw(70),
+    backgroundColor: '#fff',
+    elevation: 5,
+    padding: vw(3),
+    alignItems: "center",
+    justifyContent: "center",
   }
 });
