@@ -1,0 +1,11 @@
+{
+    "list" : [
+        ["elephant", "elephnats", 4000, 6 ,"./svg/elephant.svg"],
+        ["toaster", "toasters", 1.3398, 0.4572, "./svg/toaster.svg"],
+        ["ant", "ants", 0.00006, 0.0127, "./svg/ant.svg"],
+        ["earth", "earths", 5972000000000000000000000, 12742000],
+        ["banana", "bananaas", 0.118, 0.1778, "./svg/banana.svg"],
+        ["dice", "dice", 0.0041, 0.012, "./svg/dice.sv"]
+    ]
+
+}

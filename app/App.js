@@ -83,7 +83,6 @@ export default function App() {
 
   var unitList = Object.keys(units["length"]);
   unitList = unitList.concat(Object.keys(units["mass"]));
-  unitList = unitList.concat(Object.keys(units["surfaceArea"]));
   console.log(unitList);
 
 
