@@ -92,7 +92,7 @@ export default function App() {
        
         <Pressable
         nativeID = {unitList[i].toString()}
-         onPress ={ () => {
+         onPress ={ () => {                                // TODO https://stackoverflow.com/questions/39488876/passing-values-to-a-method-by-triggering-onpress-in-react-native 
           console.log("native id:"+self.nativeID);
           setUnit(self.nativeID);
           fadeOut();
@@ -104,17 +104,18 @@ export default function App() {
 
 
 
-
-
-
-
-
   return (
     <View style={styles.container}>
-    <Animated.View style={styles.buttonicantthinkofaname, {
+    <Animated.View style={{ ...styles.buttonicantthinkofaname,
         transform: [{ scale: buttonSize }],
-      }}>
-      <Pressable><Text>
+      }}
+      
+      >
+      <Pressable 
+      style = {{flex: 1, padding: vw(3), width: vw(70), alignItems:'center', justifyContent:'center'}}
+      onPressIn = {() => { boopIn() }}
+        onPressOut={() => { boopOut() }}
+        ><Text>
         three Bananaas long
       </Text></Pressable>
     </Animated.View>
@@ -168,6 +169,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     paddingLeft: 40,
     paddingRight: 0,
+    backgroundColor: 'white', 
   },
   unitPressable: {
     flex: 1,
@@ -190,7 +192,7 @@ const styles = StyleSheet.create({
     width: vw(70),
     backgroundColor: '#fff',
     elevation: 5,
-    padding: vw(3),
+    // padding: vw(3),
     alignItems: "center",
     justifyContent: "center",
   }
