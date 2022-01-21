@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef, useEffect } from 'react';
-import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pressable  } from 'react-native';
+import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pressable, ScrollView  } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -19,26 +19,27 @@ export default function App() {
 
   
 
-  const [value, onChangeText] = React.useState('');
-  const [unit, setUnit] = React.useState('M');
+  const [value, onChangeText] = React.useState('100');
+  const [unit, setUnit] = React.useState('Meters');
 
-  const buttonSize = useRef(1).current;
+  const buttonSize = useRef(new Animated.Value(1)).current;
 
   const boopIn = () => {
+    console.log("boop");
     Animated.timing(buttonSize, {
       toValue: 1.1,
-      duration: 300,
+      duration: 100,
       useNativeDriver: false,
     }).start();
   };
 
   const boopOut = () => {
-    console.log("fadeourt");
     Animated.timing(buttonSize, {
       toValue: 1,
       useNativeDriver: false,
-      duration: 300
+      duration: 100
     }).start();
+    fadeIn();
   };
 
 
@@ -97,7 +98,7 @@ export default function App() {
           setUnit(self.nativeID);
           fadeOut();
           }}
-          style={{width: vw(80)}}><Text>{unitList[i]}</Text></Pressable>
+          style={{width: vw(80)}}><Text style={styles.optionButtonText}>{unitList[i]}</Text></Pressable>
         );
     } // % buttons are created. 
     
@@ -122,12 +123,16 @@ export default function App() {
     <Animated.View style={[
           styles.unitMenu, zAnim.getLayout()
         ]}>
+        <ScrollView>
+        <Text>Units</Text>
         {views}
+        </ScrollView>
+        
         </Animated.View>
       <View style={styles.topBox}>
       <View style={styles.input}>
       <TextInput
-      style={{ height: 50, borderColor: 'gray', borderWidth: 0, width: vw(40) }}
+      style={{ height: 50, borderColor: 'gray', borderWidth: 0, width: vw(30) }}
       keyboardType='number-pad'
       onChangeText={text => onChangeText(text)}
       value={value}
@@ -195,5 +200,8 @@ const styles = StyleSheet.create({
     // padding: vw(3),
     alignItems: "center",
     justifyContent: "center",
+  }, optionButtonText: {
+    paddingLeft: vw(2),
+    fontSize: vw(6),
   }
 });
