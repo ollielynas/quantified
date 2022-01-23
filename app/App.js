@@ -28,7 +28,7 @@ export default function App() {
     console.log("boop");
     Animated.timing(buttonSize, {
       toValue: 1.1,
-      duration: 100,
+      duration: 50,
       useNativeDriver: false,
     }).start();
   };
@@ -37,12 +37,15 @@ export default function App() {
     Animated.timing(buttonSize, {
       toValue: 1,
       useNativeDriver: false,
-      duration: 100
-    }).start();
-    fadeIn();
+      duration: 50
+    }).start(); 
   };
 
-
+  const newExample = () => {
+    console.log("New Example");
+    console.log("unit: " + unit);
+    console.log("value:"+ value);
+  }
 
 
 
