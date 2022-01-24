@@ -5,11 +5,11 @@ import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pr
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-function vh(percentage) {
+function vh(percentage: number) {
   return ((percentage * windowHeight) / 100);
 }
 
-function vw(percentage) {
+function vw(percentage: number) {
   return ((percentage * windowWidth) / 100);
 }
 
@@ -41,9 +41,11 @@ export default function App() {
     }).start(); 
   };
 
+
   const newExample = () => {
     console.log("New Example");
     console.log("unit: " + unit);
+
     console.log("value:"+ value);
   }
 
@@ -72,7 +74,7 @@ export default function App() {
   useEffect(() => {
     const backAction = () => {
       fadeOut()
-      if (zAnim.y._value < 100) {
+      if (zAnim.x != zAnim.y) {
       return true
       }
     };
@@ -97,8 +99,6 @@ export default function App() {
         <Pressable
         nativeID = {unitList[i].toString()}
          onPress ={ () => {                                // TODO https://stackoverflow.com/questions/39488876/passing-values-to-a-method-by-triggering-onpress-in-react-native 
-          console.log("native id:"+self.nativeID);
-          setUnit(self.nativeID);
           fadeOut();
           }}
           style={{width: vw(80)}}><Text style={styles.optionButtonText}>{unitList[i]}</Text></Pressable>
