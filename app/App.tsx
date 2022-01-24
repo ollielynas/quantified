@@ -76,6 +76,9 @@ export default function App() {
     if (unitType = "length") {
       endValue = endValue/randomObject[3];
         setComparasonText(endValue+" "+name+" long")
+    }else if (unitType = "mass") {
+      endValue = endValue/randomObject[3];
+        setComparasonText(endValue+" "+name+" in weight")
     }
   
     
