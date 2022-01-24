@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef, useEffect } from 'react';
-import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pressable, ScrollView  } from 'react-native';
+import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pressable, ScrollView, Alert  } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -15,14 +15,20 @@ function vw(percentage: number) {
 
 export default function App() {
 
+  const refObj = require('./refObjs.json');
   const units = require('./units.json');
-
   
+
+  var unitType: string  = "Length";
+  var endValue: number = 0;
 
   const [value, onChangeText] = React.useState('100');
   const [unit, setUnit] = React.useState('Meters');
+  const [comparasonText, setComparasonText] = React.useState('Three bananananana long');
 
   const buttonSize = useRef(new Animated.Value(1)).current;
+
+  
 
   const boopIn = () => {
     console.log("boop");
@@ -31,6 +37,7 @@ export default function App() {
       duration: 50,
       useNativeDriver: false,
     }).start();
+    newExample();
   };
 
   const boopOut = () => {
@@ -43,10 +50,41 @@ export default function App() {
 
 
   const newExample = () => {
-    console.log("New Example");
-    console.log("unit: " + unit);
 
-    console.log("value:"+ value);
+    if (Number(value) == NaN){ Alert.alert(
+        'Invalid Number',
+        '',
+        [
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ],
+        {cancelable: true},
+      ); return; }
+
+    if (units["length"][unit] !== undefined) {
+      unitType = "length";
+    }else if (units["mass"][unit] !== undefined) {
+      unitType = "mass";
+    }
+    var randomObject = refObj["list"][Math.floor(Math.random() * refObj["list"].length)];
+    endValue = Number(value)*units[unitType][unit];
+
+    var name: string
+
+
+    if (endValue == 1){name = randomObject[0];}else{name = randomObject[1];} // choseing name betwene sing and plural
+
+    if (unitType = "length") {
+      endValue = endValue/randomObject[3];
+        setComparasonText(endValue+" "+name+" long")
+    }
+  
+    
+
+    console.log("unit: " + unit);
+    console.log("value:"+ endValue);
+
+
+
   }
 
 
@@ -92,13 +130,14 @@ export default function App() {
   console.log(unitList);
 
 
+
     const views = [];
     for ( var i =0; i<unitList.length; i++){
      views.push(
-       
         <Pressable
-        nativeID = {unitList[i].toString()}
-         onPress ={ () => {                                // TODO https://stackoverflow.com/questions/39488876/passing-values-to-a-method-by-triggering-onpress-in-react-native 
+        key = {unitList[i].toString()}
+         onPress ={ () => { 
+          console.log("setUnit")
           fadeOut();
           }}
           style={{width: vw(80)}}><Text style={styles.optionButtonText}>{unitList[i]}</Text></Pressable>
@@ -120,7 +159,7 @@ export default function App() {
       onPressIn = {() => { boopIn() }}
         onPressOut={() => { boopOut() }}
         ><Text>
-        three Bananaas long
+        {comparasonText}
       </Text></Pressable>
     </Animated.View>
     <Animated.View style={[
