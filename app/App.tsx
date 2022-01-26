@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useRef, useEffect } from 'react';
-import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pressable, ScrollView, Alert  } from 'react-native';
+import React, { useRef, useEffect, Component } from 'react';
+import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pressable, ScrollView, Alert,  } from 'react-native';
+// import SvgUri from 'react-native-svg-uri';
+import Earth from "./svg/earth.svg";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -50,7 +52,7 @@ export default function App() {
 
 
   const newExample = () => {
-
+console.log("new example");
     if (Number(value) == NaN){ Alert.alert(
         'Invalid Number',
         '',
@@ -74,8 +76,20 @@ export default function App() {
     if (endValue == 1){name = randomObject[0];}else{name = randomObject[1];} // choseing name betwene sing and plural
 
     if (unitType = "length") {
-      endValue = endValue/randomObject[3];
+
+      while (true) {
+        let loop: number = 0;
+        loop = loop+1;
+        console.log("loop: "+loop)
+        if (loop > 20) {
+          console.log("begger than 20 loops");
+          endValue = endValue/randomObject[3];
         setComparasonText(endValue+" "+name+" long")
+        break;
+        }
+      }
+
+      
     }else if (unitType = "mass") {
       endValue = endValue/randomObject[3];
         setComparasonText(endValue+" "+name+" in weight")
@@ -160,7 +174,7 @@ export default function App() {
       <Pressable 
       style = {{flex: 1, padding: vw(3), width: vw(70), alignItems:'center', justifyContent:'center'}}
       onPressIn = {() => { boopIn() }}
-        onPressOut={() => { boopOut() }}
+        onPressOut={() => { boopOut()}}
         ><Text>
         {comparasonText}
       </Text></Pressable>
@@ -175,6 +189,7 @@ export default function App() {
         
         </Animated.View>
       <View style={styles.topBox}>
+        
       <View style={styles.input}>
       <TextInput
       style={{ height: 50, borderColor: 'gray', borderWidth: 0, width: vw(30) }}
