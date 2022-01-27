@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useRef, useEffect, Component } from 'react';
-import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pressable, ScrollView, Alert,  } from 'react-native';
-// import SvgUri from 'react-native-svg-uri';
-import Earth from "./svg/earth.svg";
+import React, { useRef, useEffect, Component, useState } from 'react';
+import {BackHandler, Animated, StyleSheet, Text, View, Dimensions, TextInput, Pressable, ScrollView, Alert, Keyboard } from 'react-native';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,16 +20,30 @@ export default function App() {
   const units = require('./units.json');
   
 
-  var unitType: string  = "Length";
-  var endValue: number = 0;
-
+  let unitType: string  = "Length";
+  let endValue: number = 0;
+  
+  const [unicode, setUnicode] = React.useState('');
+  const [numberOfUnicode, setNumberOfUnicode] = React.useState(10);
   const [value, onChangeText] = React.useState('100');
   const [unit, setUnit] = React.useState('Meters');
-  const [comparasonText, setComparasonText] = React.useState('Three bananananana long');
+  const [comparasonText, setComparasonText] = React.useState('');
 
   const buttonSize = useRef(new Animated.Value(1)).current;
 
-  
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setNumberOfUnicode(0);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      newExample();
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const boopIn = () => {
     console.log("boop");
@@ -50,6 +63,15 @@ export default function App() {
     }).start(); 
   };
 
+  const rounding = (value: number) => {
+    console.log("og value: " + value);
+    if (value > 99) {
+      return Math.round(value);
+    } else if (value < 0 && value > 0.1) {return Math.round(value*1000)/1000
+    } else if (value < 0.1 && value > 0.01) {return Math.round(value*10000)/10000
+    } else if (value > 1 && value < 20) {return Math.round(value*100)/100
+  }else if (value >20 && value < 100) {return Math.round(value*10)/10}else if (value < 0.01){return value}
+}
 
   const newExample = () => {
 console.log("new example");
@@ -76,27 +98,28 @@ console.log("new example");
     if (endValue == 1){name = randomObject[0];}else{name = randomObject[1];} // choseing name betwene sing and plural
 
     if (unitType = "length") {
+endValue = Number(rounding(endValue/randomObject[3]));
 
-      while (true) {
-        let loop: number = 0;
-        loop = loop+1;
-        console.log("loop: "+loop)
-        if (loop > 20) {
-          console.log("begger than 20 loops");
-          endValue = endValue/randomObject[3];
-        setComparasonText(endValue+" "+name+" long")
-        break;
+      for (let i: number = 0; i < 20; i++) {
+      let randomNum: number = Math.floor(Math.random() * 2)
+                if (randomNum == 0) {setComparasonText(endValue+" "+name+" in length"); i = 20;}
+        if (i >= 19) {
+        setComparasonText(endValue+" "+name+" long"); i = 20;
+        
         }
       }
 
       
     }else if (unitType = "mass") {
-      endValue = endValue/randomObject[3];
-        setComparasonText(endValue+" "+name+" in weight")
+      endValue = Number(rounding(endValue/randomObject[2]));
+        setComparasonText(endValue+" "+name+" in weight"+unicode)
     }
-  
     
-
+    if (endValue > 30) {endValue = 30;}
+    if (endValue < 1) {endValue = 1;}
+    setUnicode(randomObject[4]);
+    setNumberOfUnicode(Math.round(endValue));
+    
     console.log("unit: " + unit);
     console.log("value:"+ endValue);
 
@@ -147,24 +170,43 @@ console.log("new example");
   console.log(unitList);
 
 
-
-    const views = [];
-    for ( var i =0; i<unitList.length; i++){
-     views.push(
-        <Pressable
-        key = {unitList[i].toString()}
-         onPress ={ () => { 
+  let unicodeCheracters: any = [];
+  for ( var i =0; i<numberOfUnicode; i++){
+   unicodeCheracters.push(
+      <Text
+      key = {"unicode"+i}
+      style = {{position: "absolute", top: vh(Math.floor(Math.random() * 50)-5),
+      left: vw(Math.floor(Math.random() * 100)), fontSize: vw((Math.floor(Math.random() * 50)+10)/(numberOfUnicode/4)),
+      transform: [{ rotate: Math.floor(Math.random() * 361).toString()+"deg" }]
+    }}
+    >{unicode}</Text>
+    );
+  } // % buttons are created. 
+  
+  const views = [];
+  for ( var i =0; i<unitList.length; i++){
+    views.push(
+      <Pressable
+      key = {unitList[i].toString()}
+      onPress ={ () => { 
           console.log("setUnit")
           fadeOut();
-          }}
-          style={{width: vw(80)}}><Text style={styles.optionButtonText}>{unitList[i]}</Text></Pressable>
+        }}
+        style={{width: vw(80)}}><Text style={styles.optionButtonText}>{unitList[i]}</Text></Pressable>
         );
     } // % buttons are created. 
     
-
-
-
-  return (
+    
+    
+    const onScreenLoad = () => {
+      newExample();
+  }
+  useEffect(() => {
+      // write your code here, it's like componentWillMount
+      onScreenLoad();
+  }, [])
+    
+    return (
     <View style={styles.container}>
     <Animated.View style={{ ...styles.buttonicantthinkofaname,
         transform: [{ scale: buttonSize }],
@@ -196,18 +238,21 @@ console.log("new example");
       keyboardType='number-pad'
       onChangeText={text => onChangeText(text)}
       value={value}
-    />
+    /><Text style = {{fontSize: vh(4)}}>|</Text>
     <Pressable style={styles.unitPressable}
     onPressOut={() => {
           fadeIn()
         }}
     ><Text>{unit}</Text></Pressable>
     </View></View>
-      <View style={styles.bottomBox}></View>
+      <View style={styles.bottomBox}>
+        {unicodeCheracters}
+      </View>
       <StatusBar style="auto" />
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -226,8 +271,12 @@ const styles = StyleSheet.create({
   bottomBox: {
     height: vh(50),
     width: vw(100),
+    alignItems:'center',
+    justifyContent:'center',
   },
   input: {
+    alignItems:'center',
+    justifyContent:'center',
     flexDirection: "row",
     width: vw(80),
     borderRadius: 100,
