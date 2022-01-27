@@ -19,7 +19,7 @@ export default function App() {
   const refObj = require('./refObjs.json');
   const units = require('./units.json');
   
-
+  
   let unitType: string  = "Length";
   let endValue: number = 0;
   
@@ -28,8 +28,13 @@ export default function App() {
   const [value, onChangeText] = React.useState('100');
   const [unit, setUnit] = React.useState('Meters');
   const [comparasonText, setComparasonText] = React.useState('');
-
+  
   const buttonSize = useRef(new Animated.Value(1)).current;
+  
+  const consoleError = (msg: string) => {
+    console.log("\x1b[31m Error "+'\x1b[33m%s\x1b[0m', msg);
+}
+
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -44,6 +49,7 @@ export default function App() {
       hideSubscription.remove();
     };
   }, []);
+
 
   const boopIn = () => {
     Keyboard.dismiss();
@@ -69,12 +75,14 @@ export default function App() {
     if (value > 99) {
       return Math.round(value);
     } else if (value < 0 && value > 0.1) {return Math.round(value*1000)/1000
-    } else if (value < 0.1 && value > 0.01) {return Math.round(value*10000)/10000
+    } else if (value < 0.1 && value > 0.01) {return Number( Number(value.toPrecision(4)) )
     } else if (value > 1 && value < 20) {return Math.round(value*100)/100
-  }else if (value >20 && value < 100) {return Math.round(value*10)/10}else if (value < 0.01){return value}
+  }else if (value >20 && value < 100) {return Math.round(value*10)/10}else if (value < 0.01){return Number( value.toPrecision(4) )}
+  return  Number( value.toPrecision(4) )
 }
 
   const newExample = () => {
+    if (zAnim.x == zAnim.y) {consoleError("the unit menu is up but the example is changeing")}
     Keyboard.dismiss();
 //console.log("new example");
     if (Number(value) == NaN){ Alert.alert(
@@ -91,33 +99,35 @@ export default function App() {
       unitType = "length";
     }else if (units["mass"][unit] !== undefined) {
       unitType = "mass";
-    }
+    }else { consoleError("unit type not found"+unit);setUnit("Meter");}
+
     var randomObject = refObj["list"][Math.floor(Math.random() * refObj["list"].length)];
+
+    //console.log(unit);
     endValue = Number(value)*units[unitType][unit];
-
     var name: string
-
 
     if (endValue == 1){name = randomObject[0];}else{name = randomObject[1];} // choseing name betwene sing and plural
 
-    if (unitType = "length") {
-endValue = Number(rounding(endValue/randomObject[3]));
+    if (unitType == "length") {
 
+let ogNumber: number = endValue/randomObject[3];
+endValue = Number(rounding(endValue/randomObject[3]));
+console.log("og number: "+ogNumber, "end value: "+endValue);
       for (let i: number = 0; i < 20; i++) {
       let randomNum: number = Math.floor(Math.random() * 4);
-      console.log("random value: " + randomNum);
+      //console.log("random value: " + randomNum);
                 if (randomNum == 1) {setComparasonText(endValue+" "+name+" in length"); i = 20;}
-                if (randomNum == 2) { if (endValue < 1) {setComparasonText(endValue*100+"% of a/an"+randomObject[0]+" in length"); i = 20;}}
+                if (randomNum == 2) { if (endValue < 1) {setComparasonText(Number( (endValue*100).toPrecision(2) )+"% of "+"a/an/the "+randomObject[0]+" in length"); i = 20;}}
         if (i == 19) {
         setComparasonText(endValue+" "+name+" long"); i = 20;
-        
         }
       }
 
       
-    }else if (unitType = "mass") {
+    }if (unitType == "mass") {
       endValue = Number(rounding(endValue/randomObject[2]));
-        setComparasonText(endValue+" "+name+" in weight"+unicode)
+        setComparasonText(endValue+" "+name+" in weight");
     }
     
     if (endValue > 30) {endValue = 30;}
@@ -152,6 +162,7 @@ endValue = Number(rounding(endValue/randomObject[3]));
       useNativeDriver: false,
       duration: 300
     }).start();
+    newExample();
   };
 
   useEffect(() => {
@@ -180,7 +191,7 @@ endValue = Number(rounding(endValue/randomObject[3]));
       <Text
       key = {"unicode"+i}
       style = {{position: "absolute", top: vh(Math.floor(Math.random() * 50)-5),
-      left: vw(Math.floor(Math.random() * 100)), fontSize: vw((Math.floor(Math.random() * 50)+10)/(numberOfUnicode/4)),
+      left: vw(Math.floor(Math.random() * 100)-5), fontSize: vw((Math.floor(Math.random() * 50)+10)/(Math.ceil(numberOfUnicode/4))),
       transform: [{ rotate: Math.floor(Math.random() * 361).toString()+"deg" }]
     }}
     >{unicode}</Text>
@@ -196,7 +207,9 @@ endValue = Number(rounding(endValue/randomObject[3]));
           //console.log("setUnit")
           fadeOut();
         }}
-        style={{width: vw(80)}}><Text style={styles.optionButtonText}>{unitList[i]}</Text></Pressable>
+        style={{width: vw(80)}}>
+          <Text style={styles.optionButtonText} onPress={(event) => {setUnit(event._dispatchInstances.memoizedProps.children); fadeOut()}} >
+            {unitList[i]}</Text></Pressable>
         );
     } // % buttons are created. 
     
@@ -206,7 +219,6 @@ endValue = Number(rounding(endValue/randomObject[3]));
       newExample();
   }
   useEffect(() => {
-      // write your code here, it's like componentWillMount
       onScreenLoad();
   }, [])
     
