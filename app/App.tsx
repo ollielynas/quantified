@@ -46,7 +46,8 @@ export default function App() {
   }, []);
 
   const boopIn = () => {
-    console.log("boop");
+    Keyboard.dismiss();
+    //console.log("boop");
     Animated.timing(buttonSize, {
       toValue: 1.1,
       duration: 50,
@@ -64,7 +65,7 @@ export default function App() {
   };
 
   const rounding = (value: number) => {
-    console.log("og value: " + value);
+    //console.log("og value: " + value);
     if (value > 99) {
       return Math.round(value);
     } else if (value < 0 && value > 0.1) {return Math.round(value*1000)/1000
@@ -74,12 +75,14 @@ export default function App() {
 }
 
   const newExample = () => {
-console.log("new example");
+    Keyboard.dismiss();
+//console.log("new example");
     if (Number(value) == NaN){ Alert.alert(
         'Invalid Number',
         '',
         [
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
+          {text: 'OK', onPress: () => console.log('Error')
+        },
         ],
         {cancelable: true},
       ); return; }
@@ -101,9 +104,11 @@ console.log("new example");
 endValue = Number(rounding(endValue/randomObject[3]));
 
       for (let i: number = 0; i < 20; i++) {
-      let randomNum: number = Math.floor(Math.random() * 2)
-                if (randomNum == 0) {setComparasonText(endValue+" "+name+" in length"); i = 20;}
-        if (i >= 19) {
+      let randomNum: number = Math.floor(Math.random() * 4);
+      console.log("random value: " + randomNum);
+                if (randomNum == 1) {setComparasonText(endValue+" "+name+" in length"); i = 20;}
+                if (randomNum == 2) { if (endValue < 1) {setComparasonText(endValue*100+"% of a/an"+randomObject[0]+" in length"); i = 20;}}
+        if (i == 19) {
         setComparasonText(endValue+" "+name+" long"); i = 20;
         
         }
@@ -120,8 +125,8 @@ endValue = Number(rounding(endValue/randomObject[3]));
     setUnicode(randomObject[4]);
     setNumberOfUnicode(Math.round(endValue));
     
-    console.log("unit: " + unit);
-    console.log("value:"+ endValue);
+    //console.log("unit: " + unit);
+    //console.log("value:"+ endValue);
 
 
 
@@ -132,7 +137,7 @@ endValue = Number(rounding(endValue/randomObject[3]));
 
   const zAnim = useRef(new Animated.ValueXY({ x: vw(10), y: vh(100) })).current;
   const fadeIn = () => {
-
+    Keyboard.dismiss()
     Animated.timing(zAnim, {
       toValue: { x: vw(10), y: vh(10) },
       duration: 300,
@@ -141,7 +146,7 @@ endValue = Number(rounding(endValue/randomObject[3]));
   };
 
   const fadeOut = () => {
-    console.log("fadeourt");
+    //console.log("fadeourt");
     Animated.timing(zAnim, {
       toValue: { x: vw(10), y: vh(100) },
       useNativeDriver: false,
@@ -167,7 +172,6 @@ endValue = Number(rounding(endValue/randomObject[3]));
 
   var unitList = Object.keys(units["length"]);
   unitList = unitList.concat(Object.keys(units["mass"]));
-  console.log(unitList);
 
 
   let unicodeCheracters: any = [];
@@ -189,7 +193,7 @@ endValue = Number(rounding(endValue/randomObject[3]));
       <Pressable
       key = {unitList[i].toString()}
       onPress ={ () => { 
-          console.log("setUnit")
+          //console.log("setUnit")
           fadeOut();
         }}
         style={{width: vw(80)}}><Text style={styles.optionButtonText}>{unitList[i]}</Text></Pressable>
